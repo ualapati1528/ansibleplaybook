@@ -1,0 +1,37 @@
+---
+- name: Installing and configure tomcat in ansible
+  hosts: 192.168.2.30 
+  become: yes
+
+  vars: 
+    ansible_become_password: "vagrant"
+  
+  tasks:
+    - name: install tomcat
+      ansible.builtin.yum:
+        name: 
+          - tomcat
+          - tomcat-webapps
+          - tomcat-admin-webapps
+          - tomcat-docs-webapp  
+        state: present
+    - name: start tomcat
+      ansible.builtin.service:
+        name: tomcat
+        state: started
+    - name: enable tomcat
+      ansible.builtin.service:
+        name: tomcat
+        enabled: yes
+        state: started
+    - name: copy install_tomcat.xml
+      ansible.builtin.copy:
+        src: tomcat-user.xml
+        dest: /usr/share/tomcat/conf/tomcat-users.xml
+        group: tomcat
+        mode: 0644 
+    - name: restart tomcat
+      ansible.builtin.service:
+        name: tomcat
+        state: restarted
+...  

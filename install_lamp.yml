@@ -1,0 +1,50 @@
+---
+- name: install and configure apache 
+  hosts: web
+  become: yes
+  
+  vars: 
+    become_ansible_pass: "vagrant"
+ 
+  tasks:
+    - name: install httpd
+      ansible.builtin.yum:
+         name: httpd
+         state: present
+    - name: copy index.html
+      ansible.builtin.copy:
+        src: index.html
+        dest: /var/www/html/index.html
+    - name: start httpd
+      ansible.builtin.service:
+        name: httpd
+        state: started
+
+    - name: install mysql
+      ansible.builtin.yum:
+        name: 
+          - mariadb-server
+          - mariadb      
+        state: present
+    - name: start mariadb
+      ansible.builtin.service:
+        name: mariadb
+        state: started
+    - name: install php  
+      ansible.builtin.yum:
+        name: 
+          - php
+          - php-mysql  
+        state: present
+    - name: copy info.php
+      ansible.builtin.copy:
+        src: info.php
+        dest: /var/www/html/info.php
+    
+    - name: restart php
+      ansible.builtin.service:
+        name: php
+        state: restarted
+...  
+
+  

@@ -1,0 +1,30 @@
+---
+- name: Insatalling and configuring Lamp
+  hosts: web
+  become: yes
+  tasks:
+    - name: Installing Apache, MySQL and PHP
+      yum:
+        name:
+          - httpd
+          - mariadb
+          - mariadb-server
+          - php
+          - php-mysql
+        state: installed
+    - name: Enabling and Starting the service httpd
+      service:
+        name: httpd
+        enabled: yes
+        state: started
+    - name: Enabling and starting the service MySQL
+      service:
+        name: mariadb
+        enabled: yes
+        state: started
+    - name: copying the php file
+      copy:
+        src: info.php
+        dest: /var/www/html/info.php
+        force: yes
+... 
